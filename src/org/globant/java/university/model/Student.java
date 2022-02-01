@@ -18,10 +18,6 @@ public class Student {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
     }
@@ -36,5 +32,14 @@ public class Student {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "id=" + this.id +
+                ", name='" + this.name +
+                ", age=" + this.age +
+                '}';
     }
 }
