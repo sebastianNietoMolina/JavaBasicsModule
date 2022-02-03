@@ -29,8 +29,9 @@ public class PartTimeTeacher extends Teacher {
         return "PartTimeTeacher{" +
                 "id=" + getId() +
                 ", name=" + getName() +
-                ", baseSalary=" + getBaseSalary() +
-                ", hoursPerWeek=" + this.hoursPerWeek +
+                ", base salary=" + getBaseSalary() +
+                ", hours per week=" + this.hoursPerWeek +
+                ", salary calculated =" + getSalaryCalculated() +
                 '}';
     }
 }

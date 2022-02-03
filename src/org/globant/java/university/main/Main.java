@@ -15,12 +15,10 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         University university = new University(new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-
         IUniversityService universityService = new UniversityService(university);
         loadTeachers(universityService);
         loadStudents(universityService);
         loadSubjects(universityService);
-
         mainMenu(scanner, universityService);
     }
 
@@ -80,21 +78,17 @@ public class Main {
         String name = scanner.nextLine();
         System.out.println("Enter the class room");
         String classRoom = scanner.nextLine();
-
         printStundentList(universityService.getStudents());
         System.out.println("\nEnter the students for this subject");
         System.out.println("Just write the number with a space");
         System.out.println("For example, i choose students: 1 5 9");
         String[] choseStudents = scanner.nextLine().split(" ");
-
         for (String position : choseStudents) {
             newStudents.add(universityService.getStudents().get(Integer.parseInt(position) - 1));
         }
-
         System.out.println("\nEnter the teacher´s id");
         printTeacherList(universityService.getTeachers());
         Teacher newTeacher = universityService.getTeacherById(scanner.nextInt());
-
         Subject newSubject = new Subject(name, classRoom, newStudents, newTeacher);
         universityService.addSubjectToUniveresity(newSubject);
         System.out.println(newSubject);
@@ -112,15 +106,13 @@ public class Main {
         System.out.println("Enter student age");
         int age = scanner.nextInt();
         scanner.nextLine();
-
         Student student = new Student(name, age);
         universityService.addStudentToUnivesity(student);
-
         printSubjectList(universityService.getSubjects());
         askForSubjectToAssign(scanner, student, universityService);
     }
 
-    private static int askForSubjectToAssign(Scanner scanner, Student student, IUniversityService universityService) {
+    private static void askForSubjectToAssign(Scanner scanner, Student student, IUniversityService universityService) {
         System.out.println("\nFrom the above list, which subject would you like to assign the student? (enter the number)\n");
         boolean isOptionCorrect = false;
         byte option = scanner.nextByte();
@@ -138,8 +130,6 @@ public class Main {
                 isOptionCorrect = true;
             }
         }
-
-        return option;
     }
 
     private static void askToPrintSubjectDataSubMenu(Scanner scanner, IUniversityService universityService) {
@@ -221,7 +211,6 @@ public class Main {
         Subject subject2 = new Subject("OOP", "I-102", universityService.getStudents().subList(2, 4), universityService.getTeachers().get(1));
         Subject subject3 = new Subject("Vectorial calculus", "A-101", universityService.getStudents().subList(4, 6), universityService.getTeachers().get(2));
         Subject subject4 = new Subject("Integral calculus", "G-105", universityService.getStudents().subList(6, 9), universityService.getTeachers().get(3));
-
         universityService.addSubjectToUniveresity(subject1);
         universityService.addSubjectToUniveresity(subject2);
         universityService.addSubjectToUniveresity(subject3);
@@ -238,7 +227,6 @@ public class Main {
         Student student7 = new Student("student7", 23);
         Student student8 = new Student("student8", 17);
         Student student9 = new Student("student9", 19);
-
         universityService.addStudentToUnivesity(student1);
         universityService.addStudentToUnivesity(student2);
         universityService.addStudentToUnivesity(student3);
@@ -254,15 +242,12 @@ public class Main {
         Teacher teacherFullTime1 = new FullTimeTeacher("fullTimeTeacher1", 105000, 1);
         Teacher teacherFullTime2 = new FullTimeTeacher("fullTimeTeacher2", 145000, 2);
         Teacher teacherFullTime3 = new FullTimeTeacher("fullTimeTeacher3", 127000, 3);
-
         Teacher teacherPartTime1 = new PartTimeTeacher("partTimeTeacher1", 112000, 1);
         Teacher teacherPartTime2 = new PartTimeTeacher("partTimeTeacher2", 171000, 2);
         Teacher teacherPartTime3 = new PartTimeTeacher("partTimeTeacher3", 155000, 3);
-
         universityService.addTeacherToUniversity(teacherFullTime1);
         universityService.addTeacherToUniversity(teacherFullTime2);
         universityService.addTeacherToUniversity(teacherFullTime3);
-
         universityService.addTeacherToUniversity(teacherPartTime1);
         universityService.addTeacherToUniversity(teacherPartTime2);
         universityService.addTeacherToUniversity(teacherPartTime3);

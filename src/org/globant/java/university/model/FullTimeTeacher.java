@@ -31,8 +31,9 @@ public class FullTimeTeacher extends Teacher {
         return "FullTimeTeacher{" +
                 "id=" + getId() +
                 ", name=" + getName() +
-                ", baseSalary=" + getBaseSalary() +
-                ", experienceYears=" + this.experienceYears +
+                ", base salary=" + getBaseSalary() +
+                ", experience years=" + this.experienceYears +
+                ", salary calculated =" + getSalaryCalculated() +
                 '}';
     }
 }
