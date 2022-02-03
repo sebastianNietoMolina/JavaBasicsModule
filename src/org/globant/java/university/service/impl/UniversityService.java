@@ -3,7 +3,7 @@ package org.globant.java.university.service.impl;
 import org.globant.java.university.model.Student;
 import org.globant.java.university.model.Subject;
 import org.globant.java.university.model.University;
-import org.globant.java.university.model.ext.Teacher;
+import org.globant.java.university.model.fathers.Teacher;
 import org.globant.java.university.service.IUniversityService;
 
 import java.util.List;
@@ -47,6 +47,11 @@ public class UniversityService implements IUniversityService {
     @Override
     public List<Subject> getSubjects() {
         return this.university.getSubjects();
+    }
+
+    @Override
+    public List<Student> getStudents() {
+        return this.university.getStudents();
     }
 
     @Override

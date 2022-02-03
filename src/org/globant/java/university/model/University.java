@@ -1,6 +1,6 @@
 package org.globant.java.university.model;
 
-import org.globant.java.university.model.ext.Teacher;
+import org.globant.java.university.model.fathers.Teacher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,6 @@ public class University {
     }
 
     public void addStudentToSubject(Student student, int subjectId) {
-
         boolean existSubject = false;
         for (int i = 0; i < this.subjectList.size() && !existSubject; i++) {
             if (this.subjectList.get(i).getId() == subjectId) {

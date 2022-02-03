@@ -1,6 +1,6 @@
 package org.globant.java.university.model;
 
-import org.globant.java.university.model.ext.Teacher;
+import org.globant.java.university.model.fathers.Teacher;
 
 public class PartTimeTeacher extends Teacher {
 
@@ -8,6 +8,7 @@ public class PartTimeTeacher extends Teacher {
 
     public PartTimeTeacher(String name, float baseSalary, float hoursPerWeek) {
         super(name, baseSalary);
+        this.hoursPerWeek = hoursPerWeek;
     }
 
     public float getHoursPerWeek() {

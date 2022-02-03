@@ -1,6 +1,6 @@
 package org.globant.java.university.model;
 
-import org.globant.java.university.model.ext.Teacher;
+import org.globant.java.university.model.fathers.Teacher;
 
 import java.util.List;
 
@@ -10,29 +10,29 @@ public class Subject {
     private static int counter = 0;
     private String name;
     private String classRoom;
-    private List<Student> subjectList;
+    private List<Student> studentList;
     private Teacher teacher;
 
     public Subject() {
     }
 
-    public Subject(String name, String classRoom, List<Student> subjectList, Teacher teacher) {
+    public Subject(String name, String classRoom, List<Student> studentList, Teacher teacher) {
         this.name = name;
         this.classRoom = classRoom;
-        this.subjectList = subjectList;
+        this.studentList = studentList;
         this.teacher = teacher;
         this.id = this.counter;
         this.counter += 1;
     }
 
     public void addStudent(Student student) {
-        this.subjectList.add(student);
+        this.studentList.add(student);
     }
 
     public boolean isStudentInSubject(Student student) {
         boolean studentExist = false;
-        for (int i = 0; i < this.subjectList.size() && !studentExist; i++) {
-            if (this.subjectList.get(i).equals(student)) {
+        for (int i = 0; i < this.studentList.size() && !studentExist; i++) {
+            if (this.studentList.get(i).equals(student)) {
                 studentExist = true;
             }
         }
@@ -61,11 +61,11 @@ public class Subject {
     }
 
     public List<Student> getStudents() {
-        return subjectList;
+        return studentList;
     }
 
-    public void setStudents(List<Student> subjectList) {
-        this.subjectList = subjectList;
+    public void setStudents(List<Student> studentList) {
+        this.studentList = studentList;
     }
 
     public Teacher getTeacher() {
@@ -82,7 +82,7 @@ public class Subject {
                 "id=" + this.id +
                 ", name=" + this.name +
                 ", classRoom=" + this.classRoom +
-                ", students=" + this.subjectList +
+                ", students=" + this.studentList +
                 ", teacher=" + this.teacher +
                 '}';
     }

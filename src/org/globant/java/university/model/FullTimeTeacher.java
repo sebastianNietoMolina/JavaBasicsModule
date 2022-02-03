@@ -1,6 +1,6 @@
 package org.globant.java.university.model;
 
-import org.globant.java.university.model.ext.Teacher;
+import org.globant.java.university.model.fathers.Teacher;
 
 public class FullTimeTeacher extends Teacher {
 

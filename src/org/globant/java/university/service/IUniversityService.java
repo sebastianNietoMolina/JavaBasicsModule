@@ -2,7 +2,7 @@ package org.globant.java.university.service;
 
 import org.globant.java.university.model.Student;
 import org.globant.java.university.model.Subject;
-import org.globant.java.university.model.ext.Teacher;
+import org.globant.java.university.model.fathers.Teacher;
 
 import java.util.List;
 
@@ -17,6 +17,8 @@ public interface IUniversityService {
     List<Teacher> getTeachers();
 
     List<Subject> getSubjects();
+
+    List<Student> getStudents();
 
     Subject getSubjectById(int id);
 

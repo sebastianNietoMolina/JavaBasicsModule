@@ -1,4 +1,4 @@
-package org.globant.java.university.model.ext;
+package org.globant.java.university.model.fathers;
 
 public abstract class Teacher {
 
