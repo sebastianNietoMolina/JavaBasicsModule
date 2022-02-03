@@ -3,7 +3,9 @@ package org.globant.java.university.model;
 import org.globant.java.university.model.fathers.Teacher;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 public class University {
 
@@ -17,20 +19,31 @@ public class University {
         this.subjectList = subjectList;
     }
 
+    public void addTeacher(Teacher teacher) {
+        List<Teacher> newTeacherList = new ArrayList<>();
+        newTeacherList.addAll(teacherList);
+        newTeacherList.add(teacher);
+        setTeachers(newTeacherList);
+    }
+
     public void addStudent(Student student) {
-        this.studentList.add(student);
+        List<Student> newStudentList = new ArrayList<>();
+        newStudentList.addAll(studentList);
+        newStudentList.add(student);
+        setStudents(newStudentList);
     }
 
     public void addSubject(Subject subject) {
-        this.subjectList.add(subject);
+        List<Subject> newSubjectList = new ArrayList<>();
+        newSubjectList.addAll(subjectList);
+        newSubjectList.add(subject);
+        setSubjects(newSubjectList);
     }
 
     public void addStudentToSubject(Student student, int subjectId) {
-        boolean existSubject = false;
-        for (int i = 0; i < this.subjectList.size() && !existSubject; i++) {
-            if (this.subjectList.get(i).getId() == subjectId) {
-                this.subjectList.get(i).addStudent(student);
-                existSubject = true;
+        for (int i = 0; i < subjectList.size(); i++) {
+            if (subjectList.get(i).getId() == subjectId) {
+                subjectList.get(i).addStudent(student);
             }
         }
     }

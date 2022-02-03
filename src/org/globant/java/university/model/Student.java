@@ -38,7 +38,7 @@ public class Student {
     public String toString() {
         return "Student{" +
                 "id=" + this.id +
-                ", name='" + this.name +
+                ", name=" + this.name +
                 ", age=" + this.age +
                 '}';
     }

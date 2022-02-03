@@ -5,6 +5,7 @@ import org.globant.java.university.model.fathers.Teacher;
 import org.globant.java.university.service.IUniversityService;
 import org.globant.java.university.service.impl.UniversityService;
 
+import javax.management.remote.SubjectDelegationPermission;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -13,12 +14,12 @@ public class Main {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        List<Teacher> teacherList = loadTeachers();
-        List<Student> studentList = loadStudents();
-        List<Subject> subjectList = loadSubjects(teacherList, studentList);
+        University university = new University(new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 
-        University university = new University(teacherList, studentList, subjectList);
         IUniversityService universityService = new UniversityService(university);
+        loadTeachers(universityService);
+        loadStudents(universityService);
+        loadSubjects(universityService);
 
         mainMenu(scanner, universityService);
     }
@@ -27,26 +28,22 @@ public class Main {
         boolean exit = false;
         while (!exit) {
             byte option = askAnOptionMainMenu(scanner);
+            scanner.nextLine();
             switch (option) {
                 case 1:
                     printTeacherList(universityService.getTeachers());
-                    scanner.nextLine();
                     break;
                 case 2:
                     askToPrintSubjectDataSubMenu(scanner, universityService);
-                    scanner.nextLine();
                     break;
                 case 3:
                     createStudent(scanner, universityService);
-                    scanner.nextLine();
                     break;
                 case 4:
                     createSubject(scanner, universityService);
-                    scanner.nextLine();
                     break;
                 case 5:
                     searchSubjectsByStudentId(scanner, universityService);
-                    scanner.nextLine();
                     break;
                 case 6:
                     exit = true;
@@ -60,36 +57,38 @@ public class Main {
 
     private static void searchSubjectsByStudentId(Scanner scanner, IUniversityService universityService) {
         printStundentList(universityService.getStudents());
-        System.out.println("Enter the number of the student");
+        System.out.println("\nEnter the number of the student");
+        boolean isOptionCorrect = false;
         byte option = scanner.nextByte();
-        do {
+        scanner.nextLine();
+        while (!isOptionCorrect) {
             if (option < 1 || option > universityService.getStudents().size()) {
-                System.out.println("Not available option\n");
+                System.out.println("\nNot available option\n");
                 System.out.println("From the above list, enter the number of the studen");
                 option = scanner.nextByte();
             } else {
-                List<Subject> choseSubject = universityService.getSubjectsByGivenStudent(universityService.getStudents().get(option-1));
+                List<Subject> choseSubject = universityService.getSubjectsByGivenStudent(universityService.getStudents().get(option - 1));
                 System.out.println(choseSubject);
+                isOptionCorrect = true;
             }
-        } while (option < 1 || option > universityService.getStudents().size());
-
+        }
     }
 
     private static void createSubject(Scanner scanner, IUniversityService universityService) {
         List<Student> newStudents = new ArrayList<>();
-        System.out.println("Enter a name");
-        String name = scanner.next();
+        System.out.println("Enter subjet name");
+        String name = scanner.nextLine();
         System.out.println("Enter the class room");
-        String classRoom = scanner.next();
+        String classRoom = scanner.nextLine();
 
         printStundentList(universityService.getStudents());
-        System.out.println("Enter the students for this subject");
+        System.out.println("\nEnter the students for this subject");
         System.out.println("Just write the number with a space");
         System.out.println("For example, i choose students: 1 5 9");
-        String[] choseStudents = scanner.next().split(" ");
+        String[] choseStudents = scanner.nextLine().split(" ");
 
-        for (String position: choseStudents) {
-            newStudents.add(universityService.getStudents().get(Integer.parseInt(position)-1));
+        for (String position : choseStudents) {
+            newStudents.add(universityService.getStudents().get(Integer.parseInt(position) - 1));
         }
 
         System.out.println("\nEnter the teacher´s id");
@@ -98,19 +97,21 @@ public class Main {
 
         Subject newSubject = new Subject(name, classRoom, newStudents, newTeacher);
         universityService.addSubjectToUniveresity(newSubject);
+        System.out.println(newSubject);
     }
 
     private static void printStundentList(List<Student> studentList) {
         for (int i = 0; i < studentList.size(); i++) {
-            System.out.println((i + 1) + "." + studentList.get(i));
+            System.out.println((i + 1) + ". " + studentList.get(i));
         }
     }
 
     private static void createStudent(Scanner scanner, IUniversityService universityService) {
-        System.out.println("Enter a name");
-        String name = scanner.next();
-        System.out.println("Enter an age");
+        System.out.println("\nEnter student name");
+        String name = scanner.nextLine();
+        System.out.println("Enter student age");
         int age = scanner.nextInt();
+        scanner.nextLine();
 
         Student student = new Student(name, age);
         universityService.addStudentToUnivesity(student);
@@ -119,29 +120,31 @@ public class Main {
         askForSubjectToAssign(scanner, student, universityService);
     }
 
-    private static void askForSubjectToAssign(Scanner scanner, Student student, IUniversityService universityService) {
-        System.out.println("\nFrom the above list, which subject would you like to assign the student? (enter the number)");
+    private static int askForSubjectToAssign(Scanner scanner, Student student, IUniversityService universityService) {
+        System.out.println("\nFrom the above list, which subject would you like to assign the student? (enter the number)\n");
+        boolean isOptionCorrect = false;
         byte option = scanner.nextByte();
         scanner.nextLine();
-        do {
+        while (!isOptionCorrect) {
             if (option < 1 || option > universityService.getSubjects().size()) {
                 System.out.println("Not available option\n");
                 System.out.println("From the above list, which subject would you like to assign the student? (enter the number)");
                 option = scanner.nextByte();
                 scanner.nextLine();
             } else {
-                scanner.nextLine();
                 Subject choseSubject = universityService.getSubjects().get(option - 1);
-                universityService.addStudentToSubject(student,choseSubject.getId());
+                universityService.addStudentToSubject(student, choseSubject.getId());
                 System.out.println(choseSubject);
+                isOptionCorrect = true;
             }
-        } while (option < 1 || option > universityService.getSubjects().size());
+        }
+
+        return option;
     }
 
     private static void askToPrintSubjectDataSubMenu(Scanner scanner, IUniversityService universityService) {
         boolean exit = false;
         printSubjectList(universityService.getSubjects());
-        scanner.nextLine();
         while (!exit) {
             byte option = askAnOptionSubMenuSubjectData(scanner);
             scanner.nextLine();
@@ -153,7 +156,7 @@ public class Main {
                     exit = true;
                     break;
                 default:
-                    System.out.println("Not available option");
+                    System.out.println("\nNot available option");
                     break;
             }
         }
@@ -161,22 +164,23 @@ public class Main {
 
     private static void printSubjectData(Scanner scanner, List<Subject> subjects) {
         printSubjectList(subjects);
-        System.out.println("\nFrom the above list, which subject would you like to see? (enter the number)");
+        System.out.println("\nFrom the above list, which subject would you like to see? (enter the number)\n");
+        boolean isOptionCorrect = false;
         byte option = scanner.nextByte();
         scanner.nextLine();
-        do {
+        while (!isOptionCorrect) {
             if (option >= 1 && option <= subjects.size()) {
-                System.out.println(option);
                 Subject choseSubject = subjects.get(option - 1);
                 System.out.println(choseSubject);
+                isOptionCorrect = true;
             } else {
-                System.out.println("Not available option\n");
+                System.out.println("\nNot available option");
                 printSubjectList(subjects);
                 System.out.println("\nFrom the above list, which subject would you like to see? (enter the number)");
                 option = scanner.nextByte();
                 scanner.nextLine();
             }
-        } while (option < 1 || option > subjects.size());
+        }
     }
 
     private static byte askAnOptionSubMenuSubjectData(Scanner scanner) {
@@ -207,30 +211,24 @@ public class Main {
         System.out.println("3. Create a new student");
         System.out.println("4. Create a new subject");
         System.out.println("5. Search subjects by student");
-        System.out.println("6. Exit");
+        System.out.println("6. Exit\n");
 
         return scanner.nextByte();
     }
 
-    private static List<Subject> loadSubjects(List<Teacher> teacherList, List<Student> studentList) {
-        List<Subject> subjectList = new ArrayList<>();
+    private static void loadSubjects(IUniversityService universityService) {
+        Subject subject1 = new Subject("Diferential calculus", "E-205", universityService.getStudents().subList(0, 2), universityService.getTeachers().get(0));
+        Subject subject2 = new Subject("OOP", "I-102", universityService.getStudents().subList(2, 4), universityService.getTeachers().get(1));
+        Subject subject3 = new Subject("Vectorial calculus", "A-101", universityService.getStudents().subList(4, 6), universityService.getTeachers().get(2));
+        Subject subject4 = new Subject("Integral calculus", "G-105", universityService.getStudents().subList(6, 9), universityService.getTeachers().get(3));
 
-        Subject subject1 = new Subject("Diferential calculus", "E-205", studentList.subList(0, 2), teacherList.get(0));
-        Subject subject2 = new Subject("OOP", "I-102", studentList.subList(2, 4), teacherList.get(1));
-        Subject subject3 = new Subject("Vectorial calculus", "A-101", studentList.subList(4, 6), teacherList.get(2));
-        Subject subject4 = new Subject("Integral calculus", "G-105", studentList.subList(6, 9), teacherList.get(3));
-
-        subjectList.add(subject1);
-        subjectList.add(subject2);
-        subjectList.add(subject3);
-        subjectList.add(subject4);
-
-        return subjectList;
+        universityService.addSubjectToUniveresity(subject1);
+        universityService.addSubjectToUniveresity(subject2);
+        universityService.addSubjectToUniveresity(subject3);
+        universityService.addSubjectToUniveresity(subject4);
     }
 
-    private static List<Student> loadStudents() {
-        List<Student> studentList = new ArrayList<>();
-
+    private static void loadStudents(IUniversityService universityService) {
         Student student1 = new Student("student1", 22);
         Student student2 = new Student("student2", 21);
         Student student3 = new Student("student3", 18);
@@ -241,22 +239,18 @@ public class Main {
         Student student8 = new Student("student8", 17);
         Student student9 = new Student("student9", 19);
 
-        studentList.add(student1);
-        studentList.add(student2);
-        studentList.add(student3);
-        studentList.add(student4);
-        studentList.add(student5);
-        studentList.add(student6);
-        studentList.add(student7);
-        studentList.add(student8);
-        studentList.add(student9);
-
-        return studentList;
+        universityService.addStudentToUnivesity(student1);
+        universityService.addStudentToUnivesity(student2);
+        universityService.addStudentToUnivesity(student3);
+        universityService.addStudentToUnivesity(student4);
+        universityService.addStudentToUnivesity(student5);
+        universityService.addStudentToUnivesity(student6);
+        universityService.addStudentToUnivesity(student7);
+        universityService.addStudentToUnivesity(student8);
+        universityService.addStudentToUnivesity(student9);
     }
 
-    private static List<Teacher> loadTeachers() {
-        List<Teacher> teacherList = new ArrayList<>();
-
+    private static void loadTeachers(IUniversityService universityService) {
         Teacher teacherFullTime1 = new FullTimeTeacher("fullTimeTeacher1", 105000, 1);
         Teacher teacherFullTime2 = new FullTimeTeacher("fullTimeTeacher2", 145000, 2);
         Teacher teacherFullTime3 = new FullTimeTeacher("fullTimeTeacher3", 127000, 3);
@@ -265,13 +259,12 @@ public class Main {
         Teacher teacherPartTime2 = new PartTimeTeacher("partTimeTeacher2", 171000, 2);
         Teacher teacherPartTime3 = new PartTimeTeacher("partTimeTeacher3", 155000, 3);
 
-        teacherList.add(teacherFullTime1);
-        teacherList.add(teacherFullTime2);
-        teacherList.add(teacherFullTime3);
-        teacherList.add(teacherPartTime1);
-        teacherList.add(teacherPartTime2);
-        teacherList.add(teacherPartTime3);
+        universityService.addTeacherToUniversity(teacherFullTime1);
+        universityService.addTeacherToUniversity(teacherFullTime2);
+        universityService.addTeacherToUniversity(teacherFullTime3);
 
-        return teacherList;
+        universityService.addTeacherToUniversity(teacherPartTime1);
+        universityService.addTeacherToUniversity(teacherPartTime2);
+        universityService.addTeacherToUniversity(teacherPartTime3);
     }
 }

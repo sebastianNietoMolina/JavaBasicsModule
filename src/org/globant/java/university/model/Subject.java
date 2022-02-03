@@ -2,6 +2,7 @@ package org.globant.java.university.model;
 
 import org.globant.java.university.model.fathers.Teacher;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Subject {
@@ -26,7 +27,10 @@ public class Subject {
     }
 
     public void addStudent(Student student) {
-        this.studentList.add(student);
+        List<Student> newStudentList = new ArrayList<>();
+        newStudentList.addAll(studentList);
+        newStudentList.add(student);
+        setStudents(newStudentList);
     }
 
     public boolean isStudentInSubject(Student student) {
@@ -79,11 +83,11 @@ public class Subject {
     @Override
     public String toString() {
         return "Subject{" +
-                "id=" + this.id +
-                ", name=" + this.name +
-                ", classRoom=" + this.classRoom +
-                ", students=" + this.studentList +
-                ", teacher=" + this.teacher +
-                '}';
+                "\n id=" + this.id +
+                "\n name=" + this.name +
+                "\n classRoom=" + this.classRoom +
+                "\n students=" + this.studentList +
+                "\n teacher=" + this.teacher +
+                "\n}";
     }
 }
