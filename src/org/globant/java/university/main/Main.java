@@ -236,6 +236,9 @@ public class Main {
                 Subject choseSubject = subjects.get(option - 1);
                 System.out.println(choseSubject);
                 isOptionCorrect = true;
+                System.out.println("\nPress enter to continue");
+                scanner.nextLine();
+                printSubjectList(subjects);
             } else {
                 System.out.println("\nNot available option");
                 printSubjectList(subjects);
@@ -247,7 +250,7 @@ public class Main {
     }
 
     private static byte askAnOptionSubMenuSubjectData(Scanner scanner) {
-        System.out.println("\nWhat would you like to do? \n");
+        System.out.println("\nFrom the above list, what would you like to do? \n");
         System.out.println("1. Show specific subject data like teachers and student");
         System.out.println("2. Back to main menu");
 
