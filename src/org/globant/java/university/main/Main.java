@@ -1,12 +1,13 @@
 package org.globant.java.university.main;
 
+import org.globant.java.university.execption.UniversityException;
 import org.globant.java.university.model.*;
 import org.globant.java.university.model.fathers.Teacher;
 import org.globant.java.university.service.IUniversityService;
 import org.globant.java.university.service.impl.UniversityService;
 
-import javax.management.remote.SubjectDelegationPermission;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -24,30 +25,46 @@ public class Main {
 
     private static void mainMenu(Scanner scanner, IUniversityService universityService) {
         boolean exit = false;
+        byte option = 0;
         while (!exit) {
-            byte option = askAnOptionMainMenu(scanner);
-            scanner.nextLine();
+            try {
+                option = askAnOptionMainMenu(scanner);
+                scanner.nextLine();
+            } catch (InputMismatchException e) {
+                System.out.println("Only insert numbers");
+                scanner.nextLine();
+            }
             switch (option) {
                 case 1:
                     printTeacherList(universityService.getTeachers());
+                    System.out.println("\nPress enter to continue");
+                    scanner.nextLine();
                     break;
                 case 2:
                     askToPrintSubjectDataSubMenu(scanner, universityService);
                     break;
                 case 3:
                     createStudent(scanner, universityService);
+                    System.out.println("\nPress enter to continue\n");
+                    scanner.nextLine();
                     break;
                 case 4:
                     createSubject(scanner, universityService);
+                    System.out.println("\nPress enter to continue\n");
+                    scanner.nextLine();
                     break;
                 case 5:
                     searchSubjectsByStudentId(scanner, universityService);
+                    System.out.println("\nPress enter to continue\n");
+                    scanner.nextLine();
                     break;
                 case 6:
                     exit = true;
                     break;
                 default:
-                    System.out.println("Not available option\n");
+                    System.out.println("Not available option");
+                    System.out.println("Press enter to continue\n");
+                    scanner.nextLine();
                     break;
             }
         }
@@ -57,13 +74,26 @@ public class Main {
         printStundentList(universityService.getStudents());
         System.out.println("\nEnter the number of the student");
         boolean isOptionCorrect = false;
-        byte option = scanner.nextByte();
-        scanner.nextLine();
+        byte option = 0;
+        try {
+            option = scanner.nextByte();
+            scanner.nextLine();
+        }catch (InputMismatchException e){
+            System.out.println("Only insert numbers");
+            scanner.nextLine();
+        }
         while (!isOptionCorrect) {
             if (option < 1 || option > universityService.getStudents().size()) {
                 System.out.println("\nNot available option\n");
                 System.out.println("From the above list, enter the number of the studen");
-                option = scanner.nextByte();
+                try {
+                    option = scanner.nextByte();
+                    scanner.nextLine();
+                }catch (InputMismatchException e){
+                    System.out.println("Only insert numbers");
+                    scanner.nextLine();
+                }
+
             } else {
                 List<Subject> choseSubject = universityService.getSubjectsByGivenStudent(universityService.getStudents().get(option - 1));
                 System.out.println(choseSubject);
@@ -73,6 +103,7 @@ public class Main {
     }
 
     private static void createSubject(Scanner scanner, IUniversityService universityService) {
+        boolean isOkInsertedData = false;
         List<Student> newStudents = new ArrayList<>();
         System.out.println("Enter subjet name");
         String name = scanner.nextLine();
@@ -82,16 +113,37 @@ public class Main {
         System.out.println("\nEnter the students for this subject");
         System.out.println("Just write the number with a space");
         System.out.println("For example, i choose students: 1 5 9");
-        String[] choseStudents = scanner.nextLine().split(" ");
-        for (String position : choseStudents) {
-            newStudents.add(universityService.getStudents().get(Integer.parseInt(position) - 1));
+        while (!isOkInsertedData) {
+            try {
+                String[] choseStudents = scanner.nextLine().split(" ");
+                for (String position : choseStudents) {
+                    newStudents.add(universityService.getStudents().get(Integer.parseInt(position) - 1));
+                }
+                isOkInsertedData = true;
+            }catch (NumberFormatException e){
+                System.out.println("Only insert numbers");
+            }catch (ArrayIndexOutOfBoundsException e) {
+                System.out.println("Only insert numbers in the list of students");
+            }
         }
+        isOkInsertedData = false;
         System.out.println("\nEnter the teacher´s id");
         printTeacherList(universityService.getTeachers());
-        Teacher newTeacher = universityService.getTeacherById(scanner.nextInt());
-        Subject newSubject = new Subject(name, classRoom, newStudents, newTeacher);
-        universityService.addSubjectToUniveresity(newSubject);
-        System.out.println(newSubject);
+        while (!isOkInsertedData){
+            try {
+                Teacher newTeacher = universityService.getTeacherById(scanner.nextInt());
+                scanner.nextLine();
+                Subject newSubject = new Subject(name, classRoom, newStudents, newTeacher);
+                universityService.addSubjectToUniveresity(newSubject);
+                System.out.println(newSubject);
+                isOkInsertedData = true;
+            }catch (NumberFormatException e){
+                System.out.println("Only insert numbers");
+                scanner.nextLine();
+            } catch (UniversityException e) {
+                System.out.println(e.getMessage());
+            }
+        }
     }
 
     private static void printStundentList(List<Student> studentList) {
@@ -103,9 +155,19 @@ public class Main {
     private static void createStudent(Scanner scanner, IUniversityService universityService) {
         System.out.println("\nEnter student name");
         String name = scanner.nextLine();
-        System.out.println("Enter student age");
-        int age = scanner.nextInt();
-        scanner.nextLine();
+        boolean isOkIsertedData = false;
+        int age = 0;
+        while (!isOkIsertedData) {
+            try {
+                System.out.println("Enter student age");
+                age = scanner.nextInt();
+                scanner.nextLine();
+                isOkIsertedData = true;
+            }catch (InputMismatchException e) {
+                System.out.println("Only insert numbers");
+                scanner.nextLine();
+            }
+        }
         Student student = new Student(name, age);
         universityService.addStudentToUnivesity(student);
         printSubjectList(universityService.getSubjects());
@@ -115,14 +177,25 @@ public class Main {
     private static void askForSubjectToAssign(Scanner scanner, Student student, IUniversityService universityService) {
         System.out.println("\nFrom the above list, which subject would you like to assign the student? (enter the number)\n");
         boolean isOptionCorrect = false;
-        byte option = scanner.nextByte();
-        scanner.nextLine();
+        byte option = 0;
+        try {
+            option = scanner.nextByte();
+            scanner.nextLine();
+        } catch (InputMismatchException e) {
+            System.out.println("Only insert numbers");
+            scanner.nextLine();
+        }
         while (!isOptionCorrect) {
             if (option < 1 || option > universityService.getSubjects().size()) {
                 System.out.println("Not available option\n");
                 System.out.println("From the above list, which subject would you like to assign the student? (enter the number)");
-                option = scanner.nextByte();
-                scanner.nextLine();
+                try {
+                    option = scanner.nextByte();
+                    scanner.nextLine();
+                } catch (InputMismatchException e) {
+                    System.out.println("Only insert numbers");
+                    scanner.nextLine();
+                }
             } else {
                 Subject choseSubject = universityService.getSubjects().get(option - 1);
                 universityService.addStudentToSubject(student, choseSubject.getId());

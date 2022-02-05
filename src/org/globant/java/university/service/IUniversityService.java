@@ -1,5 +1,6 @@
 package org.globant.java.university.service;
 
+import org.globant.java.university.execption.UniversityException;
 import org.globant.java.university.model.Student;
 import org.globant.java.university.model.Subject;
 import org.globant.java.university.model.fathers.Teacher;
@@ -24,7 +25,7 @@ public interface IUniversityService {
 
     Subject getSubjectById(int id);
 
-    Teacher getTeacherById(int id);
+    Teacher getTeacherById(int id) throws UniversityException;
 
     List<Subject> getSubjectsByGivenStudent(Student student);
 

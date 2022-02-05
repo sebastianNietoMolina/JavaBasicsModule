@@ -1,5 +1,6 @@
 package org.globant.java.university.model;
 
+import org.globant.java.university.execption.UniversityException;
 import org.globant.java.university.model.fathers.Teacher;
 
 import java.util.ArrayList;
@@ -61,7 +62,7 @@ public class University {
         return subject;
     }
 
-    public Teacher getTeacherById(int teacherId) {
+    public Teacher getTeacherById(int teacherId) throws UniversityException {
         Teacher teacher = null;
         boolean existTeacher = false;
         for (int i = 0; i < this.teacherList.size() && !existTeacher; i++) {
@@ -69,6 +70,10 @@ public class University {
                 teacher = this.teacherList.get(i);
                 existTeacher = true;
             }
+        }
+
+        if (teacher == null) {
+            throw new UniversityException("The id does not exist");
         }
 
         return teacher;

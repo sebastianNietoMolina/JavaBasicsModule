@@ -1,5 +1,6 @@
 package org.globant.java.university.service.impl;
 
+import org.globant.java.university.execption.UniversityException;
 import org.globant.java.university.model.Student;
 import org.globant.java.university.model.Subject;
 import org.globant.java.university.model.University;
@@ -65,7 +66,7 @@ public class UniversityService implements IUniversityService {
     }
 
     @Override
-    public Teacher getTeacherById(int teacherId) {
+    public Teacher getTeacherById(int teacherId) throws UniversityException {
         return this.university.getTeacherById(teacherId);
     }
 
